@@ -9,16 +9,16 @@ final router = WebxRouter(index: Index(), store: zStore, routes: <WebxRoute>[
       zone: "main",
       widgetBuilder: (BuildContext context) => Container(
             child: Column(children: [
-              Text("Main widget"),
+              const Text("Main widget"),
               RaisedButton(
-                  child: Text("Page 2"),
+                  child: const Text("Page 2"),
                   onPressed: () => navigateTo(context, "/page2"))
             ]),
           )),
   WebxRoute(
     "/page2",
     handler: (BuildContext context, Map<String, dynamic> params) {
-      zStore.update("main", Text("Page 2 route"));
+      zStore.update("main", const Text("Page 2 route"));
     },
   ),
 ]);

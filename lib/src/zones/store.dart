@@ -24,66 +24,37 @@ void updateAppZone(AppZone zone, Widget widget) =>
 /// The store that manage state mutations
 class AppZoneStore {
   /// Main constructor
-  AppZoneStore(List<AppZone> zones) {
+  AppZoneStore(Map<String, AppZone> zones) {
     _init(zones);
+  }
+
+  /// The store update constructor
+  AppZoneStore.updateZone(AppZone zone, Widget widget) {
+    //print("Update app zone $zone $widget");
+    state.zones[zone.name].widget = widget;
   }
 
   /// The zones state
   final AppZoneState state = appZoneState;
 
-  /// Is the store ready
-  ///
-  /// If not run [init] before using
-  bool get isReady => state.isReady;
-
   /// Initialize the store: run this before using
-  void _init(List<AppZone> zones) {
+  void _init(Map<String, AppZone> zones) {
     assert(zones != null);
     assert(zones.isNotEmpty);
     //print("Initializing app zones");
-    state
-      ..zones = zones
-      ..isReady = true;
+    state.zones = zones;
     //print("Appzones initialized");
   }
 
   /// Access the current widget of a zone
   Widget widgetForZone(String name) {
-    Widget w;
-    for (final z in state.zones) {
-      if (z.name == name) {
-        w = z.widget;
-        break;
-      }
-    }
-    assert(w != null, "Can not find widget for zone $name");
-    return w;
-  }
-
-  /// The store update constructor
-  AppZoneStore.updateZone(AppZone zone, Widget widget) {
-    assert(
-        state.isReady,
-        "The app zones store is not ready: please run init() "
-        "on the store before using it");
-    final newZones = <AppZone>[];
-    for (final z in state.zones) {
-      if (z.name == zone.name) {
-        z.widget = widget;
-      }
-      newZones.add(z);
-    }
-    state.zones = newZones;
+    return state.zones[name].widget;
   }
 
   /// The main update function
   void update(String name, Widget widget) {
     AppZone zone;
-    for (final z in state.zones) {
-      if (z.name == name) {
-        zone = z;
-      }
-    }
+    zone = state.zones[name];
     assert(zone != null, "Did not find zone $name");
     //print("Updating zone $name");
     updateAppZone(zone, widget);

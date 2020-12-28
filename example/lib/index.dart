@@ -28,6 +28,7 @@ class _IndexState extends State<Index> {
                         ),
                       ]),
                 ),
+                zstate.widgetForZone("bottom"),
               ],
             )));
   }

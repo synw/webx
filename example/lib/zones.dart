@@ -1,10 +1,11 @@
 import 'package:webx/webx.dart';
 import 'package:flutter/widgets.dart';
 
-final List<AppZone> zones = <AppZone>[
-  AppZone("main"),
-  AppZone("sidebar", widget: Text("SIDE")),
-  AppZone("topBar", widget: Text("TOP")),
-];
+final zones = <String, AppZone>{
+  "main": AppZone("main"),
+  "sidebar": AppZone("sidebar", widget: const Text("SIDE")),
+  "topBar": AppZone("topBar", widget: const Text("TOP")),
+  "bottom": AppZone("bottom", widget: const Text("BOTTOM"))
+};
 
 final zStore = AppZoneStore(zones);
