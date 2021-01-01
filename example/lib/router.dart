@@ -5,7 +5,7 @@ import 'index.dart';
 import 'zones.dart';
 
 final router = WebxRouter(index: Index(), store: zStore, routes: <WebxRoute>[
-  WebxRoute.toZone("/",
+  WebxRoute("/",
       zone: "main",
       widgetBuilder: (BuildContext context) => Container(
             child: Column(children: [
@@ -15,7 +15,7 @@ final router = WebxRouter(index: Index(), store: zStore, routes: <WebxRoute>[
                   onPressed: () => navigateTo(context, "/page2"))
             ]),
           )),
-  WebxRoute(
+  WebxRoute.withHandler(
     "/page2",
     handler: (BuildContext context, Map<String, dynamic> params) {
       zStore.update("main", const Text("Page 2 route"));

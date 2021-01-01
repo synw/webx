@@ -11,3 +11,10 @@ class AppZone {
   /// The initial widget to populate the zone with
   Widget widget;
 }
+
+class ZoneBuilder {
+  ZoneBuilder({@required this.zone, @required this.builder});
+
+  final String zone;
+  final Widget Function(BuildContext, Map<String, dynamic>) builder;
+}

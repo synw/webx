@@ -1,28 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
+import 'package:webx/src/zones/models.dart';
+import 'package:webx/webx.dart';
 
 import 'zones/store.dart';
 
 final _router = FluroRouter();
 
 /// A method to navigate to a route
-void navigateTo(BuildContext context, String route) {
-  _router.navigateTo(context, route, transition: TransitionType.none);
+Future<void> navigateTo(BuildContext context, String route) async {
+  await _router.navigateTo(context, route, transition: TransitionType.none);
 }
 
 /// A base route
 class WebxRoute {
-  /// Provide an url and a handler
-  const WebxRoute(this.url, {@required this.handler})
-      : zone = null,
-        widgetBuilder = null;
-
   /// Route to update a given zone
-  const WebxRoute.toZone(this.url,
-      {@required this.zone, @required this.widgetBuilder, this.handler});
+  const WebxRoute(this.url,
+      {@required this.zone,
+      @required this.widgetBuilder,
+      this.handler,
+      this.zonesBuilder})
+      : redirectUrl = null;
+
+  /// Provide an url and a handler
+  const WebxRoute.withHandler(this.url,
+      {@required this.handler, this.zonesBuilder})
+      : zone = null,
+        widgetBuilder = null,
+        redirectUrl = null;
+
+  const WebxRoute.redirect(this.url, this.redirectUrl)
+      : zone = null,
+        widgetBuilder = null,
+        zonesBuilder = null,
+        handler = null;
 
   /// The route url
   final String url;
+
+  final String redirectUrl;
 
   /// The zone for the route
   final String zone;
@@ -33,6 +49,8 @@ class WebxRoute {
   /// The route handler
   final void Function(BuildContext, Map<String, dynamic>) handler;
 
+  final List<ZoneBuilder> zonesBuilder;
+
   /// Define the route handler
   Handler routeHandler(Widget index, AppZoneStore store) {
     return Handler(
@@ -42,6 +60,11 @@ class WebxRoute {
       }
       if (handler != null) {
         handler(context, params);
+      }
+      if (zonesBuilder != null) {
+        zonesBuilder.forEach((zoneBuilder) {
+          store.update(zoneBuilder.zone, zoneBuilder.builder(context, params));
+        });
       }
       return index;
     });
@@ -70,15 +93,27 @@ class WebxRouter {
       _router.generator;
 
   void _configureRoutes() {
+    for (final route in routes) {
+      if (route.redirectUrl == null) {
+        _router.define(route.url,
+            handler: route.routeHandler(index, store),
+            transitionType: TransitionType.none);
+      } else {
+        final r = routes.firstWhere((_r) => _r.url == route.redirectUrl);
+        if (r == null) {
+          throw Exception(
+              "Null redirect route ${route.url} ${route.redirectUrl}");
+        }
+        print("Redirect route ${route.url} ${route.redirectUrl}");
+        _router.define(route.url,
+            handler: r.routeHandler(index, store),
+            transitionType: TransitionType.none);
+      }
+    }
     _router.notFoundHandler = Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       print("ROUTE WAS NOT FOUND !!!");
       return const Text("not found");
     });
-    for (final route in routes) {
-      _router.define(route.url,
-          handler: route.routeHandler(index, store),
-          transitionType: TransitionType.none);
-    }
   }
 }
