@@ -12,9 +12,18 @@ class AppZone {
   Widget widget;
 }
 
+/// An app zone to build on route hit
 class ZoneBuilder {
-  ZoneBuilder({@required this.zone, @required this.builder});
+  /// Default constructor
+  ZoneBuilder(
+      {@required this.zone, @required this.builder, this.alwaysBuild = false});
 
+  /// The zone to build in
   final String zone;
+
+  /// The widget rebuilder
   final Widget Function(BuildContext, Map<String, dynamic>) builder;
+
+  /// Always rebuild the zone on internal route
+  final bool alwaysBuild;
 }

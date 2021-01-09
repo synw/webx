@@ -9,6 +9,7 @@ final _router = FluroRouter();
 
 /// A method to navigate to a route
 Future<void> navigateTo(BuildContext context, String route) async {
+  appZoneState.isLoaded = true;
   await _router.navigateTo(context, route, transition: TransitionType.none);
 }
 
@@ -55,15 +56,31 @@ class WebxRoute {
   Handler routeHandler(Widget index, AppZoneStore store) {
     return Handler(
         handlerFunc: (BuildContext context, Map<String, dynamic> params) {
-      if (zone != null) {
+      final isLocalRoute = store.state.isLoaded;
+      print("Route handler $params, IS LOCAL ROUTE: $isLocalRoute");
+      if (zonesBuilder == null || !isLocalRoute) {
+        print("BUILDING WIDGET FOR ZONE $zone");
         store.update(zone, widgetBuilder(context));
+      } else {
+        print("NOT BUILDING WIDGET FOR ZONE $zone");
       }
       if (handler != null) {
         handler(context, params);
       }
       if (zonesBuilder != null) {
         zonesBuilder.forEach((zoneBuilder) {
-          store.update(zoneBuilder.zone, zoneBuilder.builder(context, params));
+          var buildZone = true;
+          // always build all from direct routes
+          if (isLocalRoute) {
+            if (!zoneBuilder.alwaysBuild) {
+              buildZone = false;
+            }
+          }
+          print("Zone ${zoneBuilder.zone}: $buildZone");
+          if (buildZone) {
+            store.update(
+                zoneBuilder.zone, zoneBuilder.builder(context, params));
+          }
         });
       }
       return index;

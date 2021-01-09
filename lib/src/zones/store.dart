@@ -30,7 +30,7 @@ class AppZoneStore {
 
   /// The store update constructor
   AppZoneStore.updateZone(AppZone zone, Widget widget) {
-    //print("Update app zone $zone $widget");
+    print("Update app zone $zone $widget");
     state.zones[zone.name].widget = widget;
   }
 
