@@ -64,8 +64,10 @@ class WebxRouter {
   WebxRouter(
       {@required this.index,
       @required this.store,
-      this.routes = const <WebxRoute>[],
+      this.routes,
       this.apps = const <WebxApp>[]}) {
+    routes ??= <WebxRoute>[];
+
     _configureRoutes();
   }
 
