@@ -8,16 +8,15 @@ import '../zones/store.dart';
 class WebxRoute {
   /// Base constructor
   WebxRoute(this.url, {@required this.builders, this.appId = "mainApp"})
-      : assert(url != null),
-        assert(builders.isNotEmpty, "Provide at least one builder") {
+      : assert(url != null) {
     _initSegments();
   }
 
   /// The route url
-  final String url;
+  String url;
 
   /// The app that this route belongs to
-  final String appId;
+  String appId;
 
   /// The zone builders
   final List<ZoneBuilder> builders;
@@ -30,6 +29,9 @@ class WebxRoute {
 
   /// The first portion of the url to match
   String get matcher => _startSequence;
+
+  /// The number of segments
+  int get nSegments => _segments.length;
 
   /// Define the route handlers
   Handler routeHandler(Widget index, AppZoneStore store) {
@@ -53,7 +55,7 @@ class WebxRoute {
   void buildZones(BuildContext context, String uri, AppZoneStore store,
       {bool rebuildMain = false}) {
     final params = _readParamSegments(uri);
-    print("Param segs for $uri: $params");
+    //print("Param segs for $uri: $params");
     builders.forEach((zoneBuilder) {
       if (zoneBuilder.alwaysBuild) {
         store.update(zoneBuilder.zone, zoneBuilder.builder(context, params));
@@ -69,7 +71,7 @@ class WebxRoute {
         m[s.name] = u[s.position];
       }
     });
-    print("R seg $_segments");
+    //print("R seg $_segments");
     return m;
   }
 

@@ -2,7 +2,16 @@ import 'package:provider/provider.dart';
 import 'package:webx/webx.dart';
 import 'package:flutter/material.dart';
 
+import 'router.dart';
+
 class _IndexState extends State<Index> {
+  @override
+  void initState() {
+    super.initState();
+    print("Routes:");
+    router.routes.forEach((r) => print(r));
+  }
+
   @override
   Widget build(BuildContext context) {
     final zstate = Provider.of<AppZoneStore>(context);
