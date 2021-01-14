@@ -37,6 +37,8 @@ class AppZoneStore {
   /// The zones state
   final AppZoneState state = appZoneState;
 
+  Map<String, AppZone> get zones => state.zones;
+
   /// Initialize the store: run this before using
   void _init(Map<String, AppZone> zones) {
     assert(zones != null);
@@ -49,6 +51,15 @@ class AppZoneStore {
   /// Access the current widget of a zone
   Widget widgetForZone(String name) {
     return state.zones[name].widget;
+  }
+
+  /// The main update function
+  void updateWithParam<T>(String name, Widget widget) {
+    AppZone zone;
+    zone = state.zones[name];
+    assert(zone != null, "Did not find zone $name");
+    //print("Updating zone $name");
+    updateAppZone(zone, widget);
   }
 
   /// The main update function

@@ -12,23 +12,12 @@ class _IndexState extends State<Index> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: <Widget>[
-                zstate.widgetForZone("topBar"),
-                Expanded(
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                            flex: 2,
-                            child: SingleChildScrollView(
-                                child: zstate.widgetForZone("sidebar"))),
-                        Expanded(
-                          flex: 8,
-                          child: SingleChildScrollView(
-                              child: zstate.widgetForZone("main")),
-                        ),
-                      ]),
+                zstate.widgetForZone("topbar"),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 80.0,
+                  child: zstate.widgetForZone("main"),
                 ),
-                zstate.widgetForZone("bottom"),
               ],
             )));
   }
